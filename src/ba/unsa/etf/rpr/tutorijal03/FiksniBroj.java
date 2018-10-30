@@ -11,11 +11,16 @@ public class FiksniBroj extends TelefonskiBroj {
 
     public FiksniBroj(Grad grad, String broj)
         theBroj = "0";
-        if()
+
     }
 
     @Override
     public String ispisi() {
         return theBroj;
+    }
+
+    @Override
+    public int HashCode() {
+        return 0;
     }
 }

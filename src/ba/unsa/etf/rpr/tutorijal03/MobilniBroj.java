@@ -18,4 +18,9 @@ public class MobilniBroj extends TelefonskiBroj {
     public String ispisi() {
         return theBroj;
     }
+
+    @Override
+    public int HashCode() {
+        return 0;
+    }
 }
