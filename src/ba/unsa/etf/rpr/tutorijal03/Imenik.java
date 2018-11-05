@@ -1,54 +1,61 @@
 package ba.unsa.etf.rpr.tutorijal03;
+
 import java.util.*;
 
 public class Imenik {
-    private HashMap<String, TelefonskiBroj> imenik = new HashMap();
-    public  void dodaj (String ime, TelefonskiBroj broj){
-        imenik.put(ime,broj);
-    }
-        public String dajBroj(String ime){
-        return imenik.get(ime).ispisi();
-        // jel dobro ovo ? nesto treba pozivati ispisi ??
-    }
-    public String dajIme(TelefonskiBroj broj){
+    private Map<String, TelefonskiBroj> hashPoImenu = new HashMap<>();
 
-        for(Map.Entry<String, TelefonskiBroj> entry : imenik.entrySet() ) {
-            if(Objects.equals(broj, entry.getValue())){
-                return entry.getKey();
+    public void dodaj(String ime, TelefonskiBroj broj){
+        hashPoImenu.put(ime, broj);
+    }
+
+    public String dajBroj(String ime) {
+        if(hashPoImenu.containsKey(ime))
+            return hashPoImenu.get(ime).ispisi();
+        return null;
+    }
+
+    public String dajIme(TelefonskiBroj broj) {
+        for (Map.Entry<String, TelefonskiBroj> pair : hashPoImenu.entrySet())
+            if (pair.getValue().getClass() == broj.getClass() && pair.getValue().equals(broj))
+                return pair.getKey();
+        return null;
+    }
+
+    public String naSlovo(char s){
+        String slovo = Character.toString(s);
+        String result = "";
+        int i = 1;
+        Iterator<Map.Entry<String, TelefonskiBroj>> it = hashPoImenu.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String, TelefonskiBroj> pair = (Map.Entry<String, TelefonskiBroj>) it.next();
+            if(pair.getKey().substring(0,1).equalsIgnoreCase(slovo)){
+                result += Integer.toBinaryString(i) + ". " + pair.getKey() + " - " + pair.getValue().ispisi() + "\n";
+                i++;
             }
         }
-
-        return null;
-
+        return result;
     }
 
-    public String naSlovo (char s) {
-        String povratna = new String();
-        int brojac = 0;
-        for(Map.Entry<String, TelefonskiBroj> entry : imenik.entrySet()){
-           if(entry.getKey().startsWith(String.valueOf(s))){
-               brojac++;
-               povratna = povratna + brojac + ". " + String.valueOf(entry.getKey()) + " " + String.valueOf(entry.getValue()) + "\n";
-           }
+    public Set<String> izGrada(FiksniBroj.Grad g){
+        Set<String> result = new TreeSet<>();
+        Iterator<Map.Entry<String, TelefonskiBroj>> it = hashPoImenu.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String, TelefonskiBroj> pair = (Map.Entry<String, TelefonskiBroj>) it.next();
+            if(pair.getValue() instanceof FiksniBroj && ((FiksniBroj) pair.getValue()).getGrad().equals(g))
+                result.add(pair.getKey());
         }
-
-        return povratna;
+        return result;
     }
 
-    public Set<String> izGrada (FiksniBroj.Grad g){
-        Set<String> povratni = new TreeSet<String>();
-
-        for(Map.Entry<String, TelefonskiBroj> entry : imenik.entrySet()){
-            //if(entry.getValue() instanceof FiksniBroj)
-            if(String.valueOf(entry.getValue()).startsWith("033") && g == FiksniBroj.Grad.SARAJEVO){
-                    povratni.add("ime1");
-                } else if(String.valueOf(entry.getValue()).startsWith("032") && g == FiksniBroj.Grad.ZENICA)
-                        povratni.add("ime2");
-                    else if (String.valueOf(entry.getValue()).startsWith("035") && g == FiksniBroj.Grad.TUZLA)
-                            povratni.add("ime3");
-
+    public Set<TelefonskiBroj> izGradaBrojevi(FiksniBroj.Grad g){
+        Set<TelefonskiBroj> result = new TreeSet<>();
+        Iterator<Map.Entry<String, TelefonskiBroj>> it = hashPoImenu.entrySet().iterator();
+        while(it.hasNext()){
+            Map.Entry<String, TelefonskiBroj> pair = (Map.Entry<String, TelefonskiBroj>) it.next();
+            if(pair.getValue() instanceof FiksniBroj && ((FiksniBroj) pair.getValue()).getGrad().equals(g))
+                result.add(pair.getValue());
         }
-
-        return povratni;
+        return result;
     }
 }
